@@ -1,0 +1,52 @@
+<div>
+<div>
+    <form name="searchPupilForm" novalidate ng-show="searchPupilStatusForm">
+        <input type="text" name="findNamePupil" ng-model="findNamePupil" required placeholder="Enter pupil's name">
+
+        <span style="color:red" ng-show="searchPupilForm.findNamePupil.$touched && searchPupilForm.findNamePupil.$invalid">
+
+                    <span ng-show="searchPupilForm.findNamePupil.$error.required">Empty field</span>
+        </span>
+
+        <input type="text" name="findSnamePupil" ng-model="findSnamePupil" required placeholder="Enter pupil's surname">
+        <span style="color:red" ng-show="searchPupilForm.findSnamePupil.$touched && searchPupilForm.findSnamePupil.$invalid">
+
+                    <span ng-show="searchPupilForm.findSnamePupil.$error.required">Empty field</span>
+        </span>
+        <input type="button" ng-click="findPupil()" value="Search" ng-disabled="searchPupilForm.$invalid">
+    </form>
+</div>
+   
+   
+   <div ng-show="pupilsSearchStatus">
+    <table border="1" align="center">
+        <tr ng-repeat="a in pupils track by $index">
+            <td>{{$index + 1}}</td>
+            <td>{{a.pupil_name}}</td>
+            <td>{{a.pupil_surename}}</td>
+            <td><input type="button" value="Delete" ng-click="deleteFoundPupil(a.id)"></td>
+            <td><input type="button" value="Edit" ng-click="editPupil(a.id,a.pupil_name,a.pupil_surename)"></td>
+        </tr>
+    </table>
+    
+    <form name="editPupilForm" novalidate ng-show="editPupilStatus">
+        <input type="text" name="editNamePupil" ng-model="editNamePupil" required>
+
+        <span style="color:red" ng-show="editPupilForm.editNamePupil.$touched && editPupilForm.editNamePupil.$invalid">
+
+                    <span ng-show="editPupilForm.editNamePupil.$error.required">Empty field</span>
+        </span>
+
+        <input type="text" name="editSnamePupil" ng-model="editSnamePupil" required>
+        <span style="color:red" ng-show="editPupilForm.editSnamePupil.$touched && editPupilForm.editSnamePupil.$invalid">
+
+                    <span ng-show="editPupilForm.editSnamePupil.$error.required">Empty field</span>
+        </span>
+        <input type="button" ng-click="changePupil()" value="Edit the pupil" ng-disabled="editPupilForm.$invalid">
+    </form>
+
+
+
+    <input type="button" value="Close" ng-click="closePupils()">
+</div>
+</div>

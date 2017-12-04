@@ -1,0 +1,58 @@
+<div>
+    <div>
+        <form name="loginForm" novalidate ng-show="showLoginForm">
+            <input type="text" name="login" ng-model="login" required>
+
+            <span style="color:red" ng-show="loginForm.login.$touched && loginForm.login.$invalid">
+
+                    <span ng-show="loginForm.login.$error.required">Empty field</span>
+            </span>
+
+            <br>
+            <br>
+
+            <input type="password" name="pass" ng-model="pass" required>
+            <span style="color:red" ng-show="loginForm.pass.$touched && loginForm.pass.$invalid">
+
+                    <span ng-show="loginForm.pass.$error.required">Empty field</span>
+            </span>
+
+            <br>
+            <br>
+            <input type="button" ng-click="enter()" value="Sign in" ng-disabled="loginForm.$invalid">
+        </form>
+    </div>
+
+    <div>
+        <form name="addNewUserForm" novalidate ng-show="showNewUserForm">
+            <input type="text" name="newUserName" ng-model="newUserName" required placeholder="Type user's login">
+
+            <span style="color:red" ng-show="addNewUserForm.newUserName.$touched && addNewUserForm.newUserName.$invalid">
+
+                    <span ng-show="addNewUserForm.newUserName.$error.required">Empty field</span>
+            </span>
+
+            <br>
+            <br>
+
+            <input type="password" name="newUserPass" ng-model="newUserPass" required placeholder="Enter password">
+            <span style="color:red" ng-show="addNewUserForm.newUserPass.$touched && addNewUserForm.newUserPass.$invalid">
+
+                    <span ng-show="addNewUserForm.newUserPass.$error.required">Empty field</span>
+            </span>
+
+            <br>
+            <br>
+
+            <input type="password" name="newUserPassConfirm" ng-model="newUserPassConfirm" required placeholder="Confirm the password">
+            <span style="color:red" ng-show="addNewUserForm.newUserPassConfirm.$touched && addNewUserForm.newUserPassConfirm.$invalid">
+                    <span ng-show="addNewUserForm.newUserPassConfirm.$error.required">Empty field</span>
+            </span>
+            <br>
+            <br>
+            <input type="button" ng-click="addNewUser()" value="Add user" ng-disabled="addNewUserForm.$invalid">
+        </form>
+    </div>
+
+
+</div>

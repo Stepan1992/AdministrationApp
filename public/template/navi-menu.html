@@ -1,0 +1,15 @@
+<div>
+    <h1>School Management</h1>
+    <div class="currentUserView" ng-show="showCurrentUser">
+        <p>{{currentUserView}}         <span class="exit" ng-click="exitFunc()">Log out</span></p>
+    </div>
+
+    <div class="menu-block">
+        <h3>Menu</h3>
+        <input type="button" ng-click="teachersStart()" value="Teachers" ng-show="adminView || userView"><br><br>
+        <input type="button" ng-click="classroomStart()" value="Classrooms" ng-show="adminView || userView"><br><br>
+        <input type="button" ng-click="searchPupil()" value="Pupil search" ng-show="adminView || userView"><br><br>
+        <input type="button" ng-click="regNewUser()" value="Add new user" ng-show="adminView"><br><br>
+        <input type="button" ng-click="logIn()" value="Sign in" ng-show="loginButtonShow"><br><br>
+    </div>
+</div>

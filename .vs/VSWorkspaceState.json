@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\db",
+    "\\db\\migrations",
+    "\\db\\seeds",
+    "\\public",
+    "\\public\\js"
+  ],
+  "SelectedNode": "\\public\\js\\my.js",
+  "PreviewInSolutionExplorer": false
+}

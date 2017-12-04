@@ -1,0 +1,21 @@
+.block {
+    border: 1px solid;
+    background-color: rgb(241, 241, 239);
+    text-align: center;
+}
+
+.menu-block {
+    border: 2px solid;
+    width: 150px;
+    min-height: 150px;
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: grey;
+}
+
+.currentUserView span {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    padding-left: 25px;
+}

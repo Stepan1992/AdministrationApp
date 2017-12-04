@@ -1,0 +1,13 @@
+<form name="addTeacherForm" novalidate>
+    <input type="text" name="nameTeacher" ng-model="nameTeacher" required>
+
+
+    <span style="color:red" ng-show="addTeacherForm.nameTeacher.$touched && addTeacherForm.nameTeacher.$invalid">
+                    <span ng-show="addTeacherForm.nameTeacher.$error.required">Empty field</span>
+    </span>
+    <input type="text" name="snameTeacher" ng-model="snameTeacher" required>
+    <span style="color:red" ng-show="addTeacherForm.snameTeacher.$touched && addTeacherForm.snameTeacher.$invalid">
+                    <span ng-show="addTeacherForm.snameTeacher.$error.required">Empty field</span>
+    </span>
+    <input type="button" ng-click="addteach()" ng-disabled="addTeacherForm.$invalid" value="Add teacher">
+</form>

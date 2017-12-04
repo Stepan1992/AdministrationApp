@@ -1,0 +1,43 @@
+<div ng-show="classroomStatus">
+    <table border="1" align="center">
+        <tr ng-repeat="a in classroom2 track by $index">
+            <td>{{$index + 1}}</td>
+            <td>{{a.name}}</td>
+            <td>{{a.teacher_name}}</td>
+            <td>{{a.teacher_sname}}</td>
+            <td ng-show="adminView"><input type="button" value="Delete" ng-click="deleteClassroom(a.id, a.name)" ></td>
+            <td  ng-show="adminView"><input type="button" value="Edit" ng-click="editClassroom(a.id,a.name,a.teacher)"></td>
+            <td><input type="button" value="Goto" ng-click="gotoClassroom(a.name, a.id)"></td>
+        </tr>
+    </table>
+
+    <form name="editClassForm" novalidate ng-show="editClassStatus">
+        <input type="text" name="editClassName" ng-model="editClassName" required>
+
+        <span style="color:red" ng-show="editClassForm.editClassName.$touched && editClassForm.editClassName.$invalid">
+                    <span ng-show="editClassForm.editClassName.$error.required">Empty field</span>
+        </span>
+
+        <input type="button" ng-click="editClassFunc()" value="Edit name of class" ng-disabled="editClassForm.$invalid">
+    </form>
+
+    <input type="button" value="Add classroom" ng-click="addNewClass()" ng-show="adminView">
+
+
+    <form name="addClassForm" novalidate ng-show="addClassStatus">
+        <input type="text" name="nameNewClass" ng-model="nameNewClass" required placeholder="Class name">
+        <input type="text" name="teacherId" ng-model="teachers_id_in_classroom" required placeholder="Teacher's order number">
+
+        <span style="color:red" ng-show="addClassForm.nameNewClass.$touched && addClassForm.nameNewClass.$invalid">
+                    <span ng-show="addClassForm.nameNewClass.$error.required">Empty field</span>
+        </span>
+
+        <span style="color:red" ng-show="addClassForm.teacherId.$touched && addClassForm.teacherId.$invalid">
+                    <span ng-show="addClassForm.teacherId.$error.required">Empty field</span>
+        </span>
+
+        <input type="button" ng-click="addClass()" ng-disabled="addClassForm.$invalid" value="Add classroom">
+    </form>
+
+    <input type="button" value="Close" ng-click="closeClassroom()">
+</div>
