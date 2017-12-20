@@ -703,7 +703,7 @@ app.directive('pupilsBlock', function () {
             $scope.gotoClassroom = function (className, classId) {
                 $scope.pupilsStatus = true;
                 $scope.classroomStatus = false;
-                
+
                 $scope.currentClass = classId;
 
                 let obj = {
@@ -903,3 +903,47 @@ app.directive('pupilsSearch', function () {
 
     }
 });
+
+app.directive('test', ['$compile', function ($compile) {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'template/test.html',
+        controller: function ($scope, $http, ngDialog) {
+
+            $scope.createTable = function createTable() {
+
+                $http.get('http://localhost:8000/checkingColumn')
+                    .then(function successCallback(response) {
+                        $scope.columns = response.data;
+
+                        $http.get('http://localhost:8000/teachers')
+                            .then(function successCallback(response) {
+                                $scope.teachers = response.data;
+
+                                var tbody = angular.element(document.querySelector(".conteiner"));
+
+                                for (let i = 0; i < $scope.teachers.length; i++) {
+                                    tbody.append('<tr></tr>');
+                                    let allTr = tbody.find('tr');
+
+                                    for(let j = 0; j < $scope.columns[0].length; j++){
+                                        console.log($scope.teachers[i][$scope.columns[0][j].COLUMN_NAME]);
+                                        tbody.append('<td>' + $scope.teachers[i][$scope.columns[0][j].COLUMN_NAME] +'</td>');
+                                    };
+                                }
+
+                            }, function errorCallback(response) {
+                                console.log("Error!!!" + response.err);
+                            });
+                    }, function errorCallback(response) {
+                        console.log("Error!!!" + response.err);
+                    });
+            };
+
+            $scope.createTable();
+        },
+
+        link: function ($scope, element) {}
+    }
+}]);

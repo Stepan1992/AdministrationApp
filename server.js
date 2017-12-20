@@ -188,11 +188,26 @@ app.post('/createNewColumn', function (req, res) {
 });
 
 app.get('/checkingColumn', function (req, res) {
-    knex.schema.raw("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'seconddb' AND TABLE_NAME = 'teachers' AND COLUMN_NAME NOT IN('id', 'name', 'sname', 'created_at')")
+    knex.schema.raw("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'seconddb' AND TABLE_NAME = 'teachers' AND COLUMN_NAME NOT IN('created_at')")
         .then(function (columsName) {
         res.status(200).send(columsName);
     })
 });
+
+
+// app.get('/checkingRows', function (req, res) {
+//     knex.schema.raw("SELECT id FROM seconddb.teachers")
+//         .then(function (rowsCount) {
+//         res.status(200).send(rowsCount);
+//     })
+// });
+
+
+
+
+
+
+
 
 app.post('/edit_pupil', function (req, res) {
     knex("pupils").where('id', req.body.id).update({
