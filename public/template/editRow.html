@@ -1,0 +1,24 @@
+<form name="editRow" novalidate>
+
+        <input type="text" ng-repeat="column in editionColumn" ng-value="column.COLUMN_NAME" ng-model="editArr[$index]">
+   
+    <input type="button" ng-click="editFunc()" value="Edit"> 
+
+
+    <!-- <p ng-repeat="item in teachers">{{item.name}}</p>
+
+
+    ng-repeat='column in columns[0]'>{{column.COLUMN_NAME}} -->
+
+    <!-- <input type="text" name="nameTeacher" ng-model="nameTeacher" required> -->
+
+    <!-- 
+    <span style="color:red" ng-show="addTeacherForm.nameTeacher.$touched && addTeacherForm.nameTeacher.$invalid">
+        <span ng-show="addTeacherForm.nameTeacher.$error.required">Empty field</span>
+    </span>
+    <input type="text" name="snameTeacher" ng-model="snameTeacher" required>
+    <span style="color:red" ng-show="addTeacherForm.snameTeacher.$touched && addTeacherForm.snameTeacher.$invalid">
+        <span ng-show="addTeacherForm.snameTeacher.$error.required">Empty field</span>
+    </span>
+    <input type="button" ng-click="addteach()" ng-disabled="addTeacherForm.$invalid" value="Add teacher"> -->
+</form>

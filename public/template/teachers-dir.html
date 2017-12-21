@@ -1,38 +1,35 @@
 <div ng-show="teachersStatus">
-    <table border="1" align="center" id="table">
-       <tr>
-           <th>Order <br>
-           number</th>
-           <th>Name</th>
-           <th>Surename</th>
-           <th>Delete</th>
-           <th>Edit</th>
-           <th ng-repeat="a in column[0]">{{a.COLUMN_NAME}}</th>
-           
-       </tr>
-        <tr ng-repeat="a in teachers track by $index" id="tr">
-            <td>{{a.id}}</td>
-            <td>{{a.name}}</td>
-            <td>{{a.sname}}</td>
-            <td ng-show="adminView"><input type="button" value="Delete" ng-click="deleteTeacher(a.id)" ></td>
-            <td ng-show="adminView"><input type="button" value="Edit" ng-click="editTeacher(a.id,a.name,a.sname)"></td>      
-        </tr>
-    </table>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th ng-repeat='column in columns[0]'>{{column.COLUMN_NAME}}</th>
+                        <th>Edit row</th>
+                        <th>Delete row</th>
+                    </tr>
+                </thead>
+                <tbody class="conteiner">
+
+                </tbody>
+            </table>
+        </div>
+        <!-- <input type="button" data-id='3' class="data"> -->
+
     <input type="button" value="Add teacher" ng-click="addTeachers()" ng-show="adminView">
 
     <form name="editTeacherForm" novalidate ng-show="editTeachStatus">
         <input type="text" name="editNameTeacher" ng-model="editNameTeacher" required>
 
         <span style="color:red" ng-show="editTeacherForm.editNameTeacher.$touched && editTeacherForm.editNameTeacher.$invalid">
-                    <span ng-show="editTeacherForm.editNameTeacher.$error.required">Empty field</span>
+            <span ng-show="editTeacherForm.editNameTeacher.$error.required">Empty field</span>
         </span>
 
         <input type="text" name="editSnameTeacher" ng-model="editSnameTeacher" required>
         <span style="color:red" ng-show="editTeacherForm.editSnameTeacher.$touched && editTeacherForm.editSnameTeacher.$invalid">
-                    <span ng-show="editTeacherForm.editSnameTeacher.$error.required">Empty field</span>
+            <span ng-show="editTeacherForm.editSnameTeacher.$error.required">Empty field</span>
         </span>
         <input type="button" ng-click="editTeach()" value="Edit teacher" ng-disabled="editTeacherForm.$invalid">
-        
+
     </form>
 
     <input type="button" value="Close" ng-click="closeTeachers()">

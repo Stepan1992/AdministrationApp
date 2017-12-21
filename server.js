@@ -33,13 +33,21 @@ app.post('/del-teacher', function (req, res) {
 });
 
 app.post('/edit-teacher', function (req, res) {
-    knex('teachers').where('id', req.body.id).update({
-            name: req.body.name,
-            sname: req.body.sname
-        })
-        .then(function () {
-            res.sendStatus(200);
-        })
+
+    console.log(req.body);
+    res.sendStatus(200);
+
+    //Зробити фуенкцію яка вибирає колонки в массив
+    // knex('teachers').where('id', req.body.id).update({
+
+
+
+    //         name: req.body.name,
+    //         sname: req.body.sname
+    //     })
+    //     .then(function () {
+    //         res.sendStatus(200);
+    //     })
 });
 
 app.post('/add-teach', function (req, res) {
@@ -193,20 +201,6 @@ app.get('/checkingColumn', function (req, res) {
         res.status(200).send(columsName);
     })
 });
-
-
-// app.get('/checkingRows', function (req, res) {
-//     knex.schema.raw("SELECT id FROM seconddb.teachers")
-//         .then(function (rowsCount) {
-//         res.status(200).send(rowsCount);
-//     })
-// });
-
-
-
-
-
-
 
 
 app.post('/edit_pupil', function (req, res) {

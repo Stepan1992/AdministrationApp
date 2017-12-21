@@ -30,54 +30,19 @@ app.directive('naviBlock', function () {
             $scope.showNewUserForm = false;
 
             $scope.teachersStart = function () {
-                $http.get('http://localhost:8000/teachers')
-                    .then(function successCallback(response) {
-                        $scope.teachers = response.data;
-                    }, function errorCallback(response) {
-                        console.log("Error!!!" + response.err);
-                    });
+                //     $http.get('http://localhost:8000/teachers')
+                //         .then(function successCallback(response) {
+                //             $scope.teachers = response.data;
+                //         }, function errorCallback(response) {
+                //             console.log("Error!!!" + response.err);
+                //         });
 
-                $http.get('http://localhost:8000/checkingColumn')
-                    .then(function successCallback(response) {
-                        $scope.column = response.data;
-                        $http.get('http://localhost:8000/teachers')
-                            .then(function successCallback(response) {
-                                $scope.teachers = response.data;
-
-                                let tr = angular.element(document.querySelector("#tr"));
-                                let tdCount = tr.find('td')
-
-                                if ($scope.column[0].length != 0 && tdCount.length == 5) {
-                                    var arr = [];
-
-                                    for (var i = 0; i < $scope.column[0].length; i++) {
-                                        arr.push($scope.column[0][i].COLUMN_NAME);
-                                    };
-
-                                    $scope.arr2 = [];
-
-                                    for (var x = 0; x < $scope.teachers.length; x++) {
-                                        $scope.arr2[x] = [];
-                                        for (var j = 0; j < arr.length; j++) {
-                                            $scope.arr2[x].push($scope.teachers[x][arr[j]]);
-                                        };
-
-                                        let text = "<td ng-repeat='a in arr2[" + x + "] track by $index'><p>{{a}}</p></td>"
-
-                                        var td = angular.element(text);
-                                        var table = angular.element(document.querySelector("#table"));
-                                        var allTR = table.find('tr');
-
-                                        allTR.eq(x + 1).append($compile(td)($scope));
-                                    }
-                                }
-                            }, function errorCallback(response) {
-                                console.log("Error!!!" + response.err);
-                            });
-
-                    }, function errorCallback(response) {
-                        console.log("Error!!!" + response.err);
-                    });
+                // $http.get('http://localhost:8000/checkingColumn')
+                //     .then(function successCallback(response) {
+                //         $scope.column = response.data;
+                //     }, function errorCallback(response) {
+                //         console.log("Error!!!" + response.err);
+                //     });
 
                 $scope.teachersStatus = true;
                 $scope.classroomStatus = false;
@@ -100,6 +65,7 @@ app.directive('naviBlock', function () {
                     }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                     });
+
 
                 $scope.classroomStatus = true;
                 $scope.teachersStatus = false;
@@ -326,59 +292,136 @@ app.directive('enter', function () {
     }
 });
 
-
 app.directive('teachersBlock', function () {
     return {
         replace: true,
         templateUrl: 'template/teachers-dir.html',
         controller: function ($scope, $http, ngDialog, $compile, $rootScope, $timeout) {
-            $scope.deleteTeacher = function (index) {
-                let teacherObj = {
-                    id: index
-                }
-                $http.post('http://localhost:8000/del-teacher', teacherObj)
+
+            $scope.createTable = function createTable() {
+
+                $http.get('http://localhost:8000/checkingColumn')
                     .then(function successCallback(response) {
+                        $scope.columns = response.data;
+                        $scope.editionColumn = response.data[0];
+                        $scope.editionColumn.splice(0, 1);
+
                         $http.get('http://localhost:8000/teachers')
                             .then(function successCallback(response) {
                                 $scope.teachers = response.data;
+
+                                var tbody = angular.element(document.querySelector(".conteiner"));
+                                let trCount = tbody.find('tr');
+
+                                if (trCount.length > 0) {
+                                    tbody.empty();
+                                };
+
+                                for (let i = 0; i < $scope.teachers.length; i++) {
+                                    tbody.append('<tr></tr>');
+                                    let allTr = tbody.find('tr');
+
+                                    for (let j = 0; j < $scope.columns[0].length; j++) {
+                                        allTr.eq(allTr.length - 1).append('<td>' + $scope.teachers[i][$scope.columns[0][j].COLUMN_NAME] + '</td>');
+                                    };
+
+                                    let editButton = '<td><input type="button" ng-click="editRowFunc($event)" value="Edit"' +
+                                        'data-id=' + $scope.teachers[i].id + '></td>';
+
+                                    let editInput = angular.element(editButton);
+                                    allTr.eq(allTr.length - 1).append($compile(editInput)($scope));
+
+                                    let deleteButton = '<td><input type="button" ng-click="deleteRowFunc($event)" value="Delete"' +
+                                        'data-id=' + $scope.teachers[i].id + '></td>';
+
+                                    let deleteInput = angular.element(deleteButton);
+                                    allTr.eq(allTr.length - 1).append($compile(deleteInput)($scope));
+
+                                };
                             }, function errorCallback(response) {
                                 console.log("Error!!!" + response.err);
                             });
-                        console.log("Success!");
                     }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                     });
-
-            };
-            $scope.editTeacher = function (index, name, sname) {
-                $scope.editTeachStatus = true;
-                $scope.indexOfTeacher = index;
-                $scope.editNameTeacher = name;
-                $scope.editSnameTeacher = sname;
             };
 
-            $scope.editTeach = function (name, sname) {
+            $scope.createTable();
 
-                let teacherObj = {
-                    id: $scope.indexOfTeacher,
-                    name: $scope.editNameTeacher,
-                    sname: $scope.editSnameTeacher
+            $scope.deleteRowFunc = function (event) {
+
+                let rowId = {
+                    id: event.target.dataset.id
                 };
 
-                $http.post('http://localhost:8000/edit-teacher', teacherObj)
+                $http.post('http://localhost:8000/del-teacher', rowId)
                     .then(function successCallback(response) {
-                        $http.get('http://localhost:8000/teachers')
-                            .then(function successCallback(response) {
-                                $scope.teachers = response.data;
-                                $scope.editTeachStatus = false;
-                            }, function errorCallback(response) {
-                                console.log("Error!!!" + response.err);
-                            });
-                        console.log("Success!");
+
+                        $scope.createTable();
+
                     }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                     });
             };
+
+            $scope.editRowFunc = function (event) {
+
+                ngDialog.open({
+                        template: '/template/editRow.html',
+                        scope: $scope,
+                        controller: function ($scope, $compile, $timeout) {
+                            $scope.editArr = [];
+
+                            $scope.editFunc = function () {
+
+                                let editObj = {
+                                    id: event.target.dataset.id,
+                                    columnNamesArr: $scope.editionColumn,
+                                    editArr: $scope.editArr
+                                };
+
+                                $http.post('http://localhost:8000/edit-teacher', editObj)
+                                    .then(function successCallback(response) {
+
+                                        $scope.createTable();
+                                        ngDialog.closeAll();
+
+                                    }, function errorCallback(response) {
+                                        console.log("Error!!!" + response.err);
+                                    });
+                            };
+
+                        }
+                    })
+                    .closePromise.then(function (res) {})
+
+            }
+
+            // $scope.editTeacher = function (index, name, sname) {
+            //     $scope.editTeachStatus = true;
+            //     $scope.indexOfTeacher = index;
+            //     $scope.editNameTeacher = name;
+            //     $scope.editSnameTeacher = sname;
+            // };
+
+            // $scope.editTeach = function (name, sname) {
+
+            //     let teacherObj = {
+            //         id: $scope.indexOfTeacher,
+            //         name: $scope.editNameTeacher,
+            //         sname: $scope.editSnameTeacher
+            //     };
+
+            //     $http.post('http://localhost:8000/edit-teacher', teacherObj)
+            //         .then(function successCallback(response) {
+            //             $scope.teachers = response.data;
+            //             $scope.createTable();
+            //             $scope.editTeachStatus = false;
+
+            //         }, function errorCallback(response) {
+            //             console.log("Error!!!" + response.err);
+            //         });
+            // };
 
             $scope.addTeachers = function () {
                 ngDialog.open({
@@ -402,152 +445,20 @@ app.directive('teachersBlock', function () {
 
                                         $scope.nameTeacher = '';
                                         $scope.snameTeacher = '';
-                                        console.log("Success!");
 
-                                        $http.get('http://localhost:8000/checkingColumn')
-                                            .then(function successCallback(response) {
-                                                $scope.column = response.data;
-                                            }, function errorCallback(response) {
-                                                console.log("Error!!!" + response.err);
-                                            });
+                                        $scope.createTable();
+
                                     }, function errorCallback(response) {
                                         console.log("Error!!!" + response.err);
                                     });
                             }
                         }
                     })
-                    .closePromise.then(function (res) {
-
-                        $http.get('http://localhost:8000/checkingColumn')
-                            .then(function successCallback(response) {
-                                $scope.column = response.data;
-                                $http.get('http://localhost:8000/teachers')
-                                    .then(function successCallback(response) {
-
-                                        $scope.teachers = response.data;
-
-                                        let tr = angular.element(document.querySelector("#tr"));
-                                        let tdCount = tr.find('td')
-
-                                        if ($scope.column[0].length != 0 && tdCount.length == 5) {
-                                            var arr = [];
-
-                                            for (var i = 0; i < $scope.column[0].length; i++) {
-                                                arr.push($scope.column[0][i].COLUMN_NAME);
-
-                                            };
-
-                                            $scope.arr2 = [];
-
-                                            for (var x = 0; x < $scope.teachers.length; x++) {
-                                                $scope.arr2[x] = [];
-                                                for (var j = 0; j < arr.length; j++) {
-                                                    $scope.arr2[x].push($scope.teachers[x][arr[j]]);
-                                                };
-
-                                                let text = "<td ng-repeat='a in arr2[" + x + "] track by $index'><p>{{a}}</p></td>"
-
-                                                var td = angular.element(text);
-                                                var table = angular.element(document.querySelector("#table"));
-                                                var allTR = table.find('tr');
-
-                                                allTR.eq(x + 1).append($compile(td)($scope));
-                                            }
-                                        }
-                                    }, function errorCallback(response) {
-                                        console.log("Error!!!" + response.err);
-                                    });
-                            }, function errorCallback(response) {
-                                console.log("Error!!!" + response.err);
-                            });
-
-                        $http.get('http://localhost:8000/checkingColumn')
-                            .then(function successCallback(response) {
-                                $scope.column = response.data;
-
-                                $http.get('http://localhost:8000/teachers')
-                                    .then(function successCallback(response) {
-
-                                        $scope.teachers = response.data;
-                                        $scope.addTeachersStatus = false;
-
-                                        var arr = [];
-
-                                        for (var i = 0; i < $scope.column[0].length; i++) {
-                                            arr.push($scope.column[0][i].COLUMN_NAME);
-                                        };
-
-                                        $scope.lastAddedRow = [];
-
-                                        for (var j = 0; j < arr.length; j++) {
-                                            $scope.lastAddedRow.push($scope.teachers[$scope.teachers.length - 1][arr[j]]);
-                                        };
-
-                                        let text = "<td ng-repeat='a in lastAddedRow track by $index'><p>{{a}}</p></td>"
-
-                                        let td = angular.element(text);
-                                        let table = angular.element(document.querySelector("#table"));
-                                        let allTR = table.find('tr');
-
-                                        allTR.eq(allTR.length - 1).append($compile(td)($scope));
-
-                                    }, function errorCallback(response) {
-                                        console.log("Error!!!" + response.err);
-                                    });
-                            }, function errorCallback(response) {
-                                console.log("Error!!!" + response.err);
-                            });
-                    })
+                    .closePromise.then(function (res) {})
             };
 
-            $scope.addteach = function () {
-
-                let teacherObj = {
-
-                    name: $scope.nameTeacher,
-                    sname: $scope.snameTeacher
-                };
-
-                $http.post('http://localhost:8000/add-teach', teacherObj)
-                    .then(function successCallback(response) {
-                        $http.get('http://localhost:8000/checkingColumn')
-                            .then(function successCallback(response) {
-                                $scope.column = response.data;
-
-                                $scope.teachers = response.data;
-                                $scope.addTeachersStatus = false;
-
-                                var arr = [];
-
-                                for (var i = 0; i < $scope.column[0].length; i++) {
-                                    arr.push($scope.column[0][i].COLUMN_NAME);
-                                };
-
-                                $scope.lastAddedRow = [];
-
-                                for (var j = 0; j < arr.length; j++) {
-                                    $scope.lastAddedRow.push($scope.teachers[$scope.teachers.length - 1][arr[j]]);
-                                };
-
-                                let text = "<td ng-repeat='a in arr2[" + x + "] track by $index'><p>{{a}}</p></td>"
-
-                                var td = angular.element(text);
-                                var table = angular.element(document.querySelector("#table"));
-
-                                allTR.eq(x + 1).append($compile(td)($scope));
-
-
-                            }, function errorCallback(response) {
-                                console.log("Error!!!" + response.err);
-                            });
-                    }, function errorCallback(response) {
-                        console.log("Error!!!" + response.err);
-                    });
-            };
 
             $scope.addNewColumn = function () {
-
-                var tr = angular.element(document.querySelector("#tableContent"));
 
                 let newColumnObj = {
                     newName: $scope.newColumnName
@@ -555,36 +466,9 @@ app.directive('teachersBlock', function () {
 
                 $http.post('http://localhost:8000/createNewColumn', newColumnObj)
                     .then(function successCallback(response) {
-                        $http.get('http://localhost:8000/checkingColumn')
-                            .then(function successCallback(response) {
-                                $scope.column = response.data;
-                                $http.get('http://localhost:8000/teachers')
-                                    .then(function successCallback(response) {
-                                        $scope.teachers = response.data;
 
-                                        var lastColumn = $scope.column[0][$scope.column[0].length - 1].COLUMN_NAME;
+                        $scope.createTable();
 
-                                        for (var x = 0; x < $scope.teachers.length; x++) {
-
-                                            $scope.lastColumnArr = [];
-
-                                            $scope.lastColumnArr.push($scope.teachers[x][lastColumn]);
-
-                                            let text = "<td ng-repeat='a in lastColumnArr track by $index'><p>{{a}}</p></td>"
-
-                                            let td = angular.element(text);
-                                            let table = angular.element(document.querySelector("#table"));
-                                            let allTR = table.find('tr');
-
-                                            allTR.eq(x + 1).append($compile(td)($scope));
-                                        };
-                                    }, function errorCallback(response) {
-                                        console.log("Error!!!" + response.err);
-                                    });
-                            }, function errorCallback(response) {
-                                console.log("Error!!!" + response.err);
-                            });
-                        console.log("Success!");
                     }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                     });
@@ -903,47 +787,3 @@ app.directive('pupilsSearch', function () {
 
     }
 });
-
-app.directive('test', ['$compile', function ($compile) {
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: 'template/test.html',
-        controller: function ($scope, $http, ngDialog) {
-
-            $scope.createTable = function createTable() {
-
-                $http.get('http://localhost:8000/checkingColumn')
-                    .then(function successCallback(response) {
-                        $scope.columns = response.data;
-
-                        $http.get('http://localhost:8000/teachers')
-                            .then(function successCallback(response) {
-                                $scope.teachers = response.data;
-
-                                var tbody = angular.element(document.querySelector(".conteiner"));
-
-                                for (let i = 0; i < $scope.teachers.length; i++) {
-                                    tbody.append('<tr></tr>');
-                                    let allTr = tbody.find('tr');
-
-                                    for(let j = 0; j < $scope.columns[0].length; j++){
-                                        console.log($scope.teachers[i][$scope.columns[0][j].COLUMN_NAME]);
-                                        tbody.append('<td>' + $scope.teachers[i][$scope.columns[0][j].COLUMN_NAME] +'</td>');
-                                    };
-                                }
-
-                            }, function errorCallback(response) {
-                                console.log("Error!!!" + response.err);
-                            });
-                    }, function errorCallback(response) {
-                        console.log("Error!!!" + response.err);
-                    });
-            };
-
-            $scope.createTable();
-        },
-
-        link: function ($scope, element) {}
-    }
-}]);
