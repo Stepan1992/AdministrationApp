@@ -303,8 +303,14 @@ app.directive('teachersBlock', function () {
                 $http.get('http://localhost:8000/checkingColumn')
                     .then(function successCallback(response) {
                         $scope.columns = response.data;
-                        $scope.editionColumn = response.data[0];
-                        $scope.editionColumn.splice(0, 1);
+
+                        $scope.editionColumn = [];
+
+                        for (let i = 0; i < response.data[0].length; i++) {
+                            $scope.editionColumn[i] = response.data[0][i];
+                        };
+
+                        $scope.editionColumn.shift();
 
                         $http.get('http://localhost:8000/teachers')
                             .then(function successCallback(response) {
@@ -371,16 +377,25 @@ app.directive('teachersBlock', function () {
                         scope: $scope,
                         controller: function ($scope, $compile, $timeout) {
                             $scope.editArr = [];
+                            $scope.valuesArr = [];
+
+                            for (let i = 0; i < $scope.teachers.length; i++) {
+                                if ($scope.teachers[i]['id'] == event.target.dataset.id) {
+                                    let obj = $scope.teachers[i];
+                                    for (let j = 0; j < $scope.editionColumn.length; j++){
+                                        $scope.valuesArr.push(obj[$scope.editionColumn[j].COLUMN_NAME]);
+                                    };                                    
+                                };
+                            };
 
                             $scope.editFunc = function () {
 
                                 let editObj = {
                                     id: event.target.dataset.id,
-                                    columnNamesArr: $scope.editionColumn,
                                     editArr: $scope.editArr
                                 };
 
-                                $http.post('http://localhost:8000/edit-teacher', editObj)
+                                $http.post('http://localhost:8000/edit-row', editObj)
                                     .then(function successCallback(response) {
 
                                         $scope.createTable();
@@ -394,34 +409,7 @@ app.directive('teachersBlock', function () {
                         }
                     })
                     .closePromise.then(function (res) {})
-
-            }
-
-            // $scope.editTeacher = function (index, name, sname) {
-            //     $scope.editTeachStatus = true;
-            //     $scope.indexOfTeacher = index;
-            //     $scope.editNameTeacher = name;
-            //     $scope.editSnameTeacher = sname;
-            // };
-
-            // $scope.editTeach = function (name, sname) {
-
-            //     let teacherObj = {
-            //         id: $scope.indexOfTeacher,
-            //         name: $scope.editNameTeacher,
-            //         sname: $scope.editSnameTeacher
-            //     };
-
-            //     $http.post('http://localhost:8000/edit-teacher', teacherObj)
-            //         .then(function successCallback(response) {
-            //             $scope.teachers = response.data;
-            //             $scope.createTable();
-            //             $scope.editTeachStatus = false;
-
-            //         }, function errorCallback(response) {
-            //             console.log("Error!!!" + response.err);
-            //         });
-            // };
+            };
 
             $scope.addTeachers = function () {
                 ngDialog.open({
@@ -457,7 +445,6 @@ app.directive('teachersBlock', function () {
                     .closePromise.then(function (res) {})
             };
 
-
             $scope.addNewColumn = function () {
 
                 let newColumnObj = {
@@ -472,11 +459,30 @@ app.directive('teachersBlock', function () {
                     }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                     });
+            };
+
+            $scope.deleteColunmFunc = function (columnName) {
+
+                let deletingObj = {
+                    name: columnName
+                };
+
+                let confirmation = confirm('Are you sure you want to delete this column');
+                if (confirmation) {
+                    $http.post('http://localhost:8000/deleteColumn', deletingObj)
+                        .then(function successCallback(response) {
+
+                            $scope.createTable();
+
+                        }, function errorCallback(response) {
+                            console.log("Error!!!" + response.err);
+                        });
+
+                } else return;
             }
         }
     }
 });
-
 
 app.directive('classroomBlock', function () {
     return {

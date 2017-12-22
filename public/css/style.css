@@ -11,6 +11,8 @@
     margin-top: 5px;
     margin-left: 5px;
     background-color: grey;
+    /* float: left;
+    position: static; */
 }
 
 .currentUserView span {
@@ -18,4 +20,22 @@
     text-decoration: underline;
     cursor: pointer;
     padding-left: 25px;
+}
+
+.teachersTable,
+.teachersTable th,
+.teachersTable tr,
+.teachersTable td {
+    border: 1px solid black;
+    border-width: 3px;
+    border-style: inset;
+    border-color: #909596;
+    border-collapse: collapse;
+}
+
+.teachersTable {
+    margin: auto;
+    margin-bottom: 10px;
+    /* position: absolute;
+    float: left; */
 }

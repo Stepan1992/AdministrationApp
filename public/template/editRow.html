@@ -1,6 +1,6 @@
 <form name="editRow" novalidate>
 
-        <input type="text" ng-repeat="column in editionColumn" ng-value="column.COLUMN_NAME" ng-model="editArr[$index]">
+        <input type="text" ng-repeat="column in editionColumn" ng-value="valuesArr[$index]" ng-model="editArr[$index]">
    
     <input type="button" ng-click="editFunc()" value="Edit"> 
 

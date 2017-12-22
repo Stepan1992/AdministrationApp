@@ -1,19 +1,19 @@
 <div ng-show="teachersStatus">
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th ng-repeat='column in columns[0]'>{{column.COLUMN_NAME}}</th>
-                        <th>Edit row</th>
-                        <th>Delete row</th>
-                    </tr>
-                </thead>
-                <tbody class="conteiner">
-
-                </tbody>
-            </table>
-        </div>
-        <!-- <input type="button" data-id='3' class="data"> -->
+    <div>
+        <table class="teachersTable">
+            <thead>
+                <tr>
+                    <th ng-repeat='column in columns[0]'>{{column.COLUMN_NAME}}
+                        <input type="button" value="Delete column" ng-if="$index > 2" ng-click="deleteColunmFunc(column.COLUMN_NAME)">
+                    </th>
+                    <th>Edit row</th>
+                    <th>Delete row</th>
+                </tr>
+            </thead>
+            <tbody class="conteiner">
+            </tbody>
+        </table>
+    </div>
 
     <input type="button" value="Add teacher" ng-click="addTeachers()" ng-show="adminView">
 

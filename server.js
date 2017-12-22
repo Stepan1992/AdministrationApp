@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -32,22 +31,23 @@ app.post('/del-teacher', function (req, res) {
         })
 });
 
-app.post('/edit-teacher', function (req, res) {
+//Коли не вносити дані в колонки замінити null на значення з value
 
-    console.log(req.body);
-    res.sendStatus(200);
+app.post('/edit-row', function (req, res) {
 
-    //Зробити фуенкцію яка вибирає колонки в массив
-    // knex('teachers').where('id', req.body.id).update({
+    knex.schema.raw("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'seconddb' AND TABLE_NAME = 'teachers' AND COLUMN_NAME NOT IN('id', 'created_at')")
+        .then(function (columnsName) {
+            let obj = {};
 
+            for (let i = 0; i < columnsName[0].length; i++) {
+                obj[columnsName[0][i].COLUMN_NAME] = req.body.editArr[i]
+            };
 
-
-    //         name: req.body.name,
-    //         sname: req.body.sname
-    //     })
-    //     .then(function () {
-    //         res.sendStatus(200);
-    //     })
+            knex('teachers').where('id', req.body.id).update(obj)
+                .then(function () {
+                    res.sendStatus(200);
+                })
+        })
 });
 
 app.post('/add-teach', function (req, res) {
@@ -197,10 +197,21 @@ app.post('/createNewColumn', function (req, res) {
 
 app.get('/checkingColumn', function (req, res) {
     knex.schema.raw("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'seconddb' AND TABLE_NAME = 'teachers' AND COLUMN_NAME NOT IN('created_at')")
-        .then(function (columsName) {
-        res.status(200).send(columsName);
-    })
+        .then(function (columnsName) {
+            res.status(200).send(columnsName);
+        })
 });
+
+app.post('/deleteColumn', function (req, res) {
+    let columnName = req.body.name;
+    let sql = "ALTER TABLE teachers DROP COLUMN " + columnName;
+    knex.schema.raw(sql)
+        .then(function () {
+            res.sendStatus(200);
+        })
+});
+
+
 
 
 app.post('/edit_pupil', function (req, res) {
@@ -215,7 +226,7 @@ app.post('/edit_pupil', function (req, res) {
 
 app.get('/classroom', function (req, res) {
     knex.select('classroom.id as id', 'classroom.name as name', 'teachers.name as teacher_name',
-     'teachers.sname as teacher_sname').from('classroom').innerJoin('teachers', 'classroom.teachers_id', 'teachers.id')
+            'teachers.sname as teacher_sname').from('classroom').innerJoin('teachers', 'classroom.teachers_id', 'teachers.id')
         .then(function (teachers) {
             res.status(200).send(teachers)
         })
