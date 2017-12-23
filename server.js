@@ -31,15 +31,15 @@ app.post('/del-teacher', function (req, res) {
         })
 });
 
-//Коли не вносити дані в колонки замінити null на значення з value
-
 app.post('/edit-row', function (req, res) {
 
     knex.schema.raw("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'seconddb' AND TABLE_NAME = 'teachers' AND COLUMN_NAME NOT IN('id', 'created_at')")
         .then(function (columnsName) {
+
             let obj = {};
 
             for (let i = 0; i < columnsName[0].length; i++) {
+                if (req.body.editArr[i] == null) continue;
                 obj[columnsName[0][i].COLUMN_NAME] = req.body.editArr[i]
             };
 

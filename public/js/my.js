@@ -382,9 +382,9 @@ app.directive('teachersBlock', function () {
                             for (let i = 0; i < $scope.teachers.length; i++) {
                                 if ($scope.teachers[i]['id'] == event.target.dataset.id) {
                                     let obj = $scope.teachers[i];
-                                    for (let j = 0; j < $scope.editionColumn.length; j++){
+                                    for (let j = 0; j < $scope.editionColumn.length; j++) {
                                         $scope.valuesArr.push(obj[$scope.editionColumn[j].COLUMN_NAME]);
-                                    };                                    
+                                    };
                                 };
                             };
 
@@ -393,6 +393,11 @@ app.directive('teachersBlock', function () {
                                 let editObj = {
                                     id: event.target.dataset.id,
                                     editArr: $scope.editArr
+                                };
+
+                                if ($scope.editArr.length === 0) {
+                                    ngDialog.closeAll();
+                                    return
                                 };
 
                                 $http.post('http://localhost:8000/edit-row', editObj)
