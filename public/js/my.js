@@ -450,20 +450,47 @@ app.directive('teachersBlock', function () {
                     .closePromise.then(function (res) {})
             };
 
-            $scope.addNewColumn = function () {
+            $scope.showColumnNameDailog = function () {
+                ngDialog.open({
+                        template: '/template/createColumn.html',
+                        scope: $scope,
+                        controller: function ($scope) {
 
-                let newColumnObj = {
-                    newName: $scope.newColumnName
-                };
+                            $scope.columnNameRegExp = /^([а-яёїі]+|[a-z]+)$/i;
+                            $scope.columnDuplicateView = false;
 
-                $http.post('http://localhost:8000/createNewColumn', newColumnObj)
-                    .then(function successCallback(response) {
+                            $scope.addNewColumn = function (valid) {
+                                if (valid) {
 
-                        $scope.createTable();
+                                    for (let i = 0; i < $scope.columns[0].length; i++) {
+                                        if ($scope.columns[0][i].COLUMN_NAME == $scope.newColumnName) {
+                                            $scope.columnDuplicateView = true;
+                                            return;
+                                        };
+                                    };
 
-                    }, function errorCallback(response) {
-                        console.log("Error!!!" + response.err);
-                    });
+                                    let newColumnObj = {
+                                        newName: $scope.newColumnName
+                                    };
+
+                                    $http.post('http://localhost:8000/createNewColumn', newColumnObj)
+                                        .then(function successCallback(response) {
+
+                                            $scope.createTable();
+                                            ngDialog.closeAll();
+
+                                        }, function errorCallback(response) {
+                                            console.log("Error!!!" + response.err);
+                                        });
+
+                                } else {
+                                    return
+                                }
+                            };
+                        }
+                    })
+                    .closePromise.then(function (res) {})
+
             };
 
             $scope.deleteColunmFunc = function (columnName) {

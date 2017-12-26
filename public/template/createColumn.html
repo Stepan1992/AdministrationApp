@@ -1,0 +1,10 @@
+<form name="createColumnForm" novalidate ng-submit="addNewColumn(createColumnForm.$valid)">
+    <input type="text" ng-model="newColumnName" name="columnName" required ng-pattern="columnNameRegExp">
+    <input type="submit" value="Add new column">
+    <span style="color:red" ng-show="createColumnForm.columnName.$touched && createColumnForm.columnName.$invalid">
+        <p>Column name must contain only letters without spaces</p>
+    </span>
+    <span style="color:red" ng-show="columnDuplicateView">
+        <p>Dublicate column name</p>
+    </span>
+</form>
